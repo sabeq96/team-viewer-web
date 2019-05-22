@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Screen share</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body style="margin: 0; padding: 0;">
+  <img src="blank" id="screen" style="width: 100%; height: 100%" />
+  </body>
+
+  <script>
+    const socket = io();
+    const actions = {
+      MOUSE_MOVE: 'MOUSE_MOVE',
+      CLICK: 'CLICK',
+      TYPE: 'TYPE',
+      TICK: 'TICK',
+      SCROLL: 'SCROLL',
+    };
+
+    const screenDOM = document.getElementById('screen');
+
+    document.body.addEventListener('mousemove', (e) => {
+      socket.emit(actions.MOUSE_MOVE, {
+        x: e.x,
+        y: e.y,
+      });
+    });
+
+    document.body.addEventListener('click', (e) => {
+      socket.emit(actions.CLICK, {});
+    })
+
+    document.body.addEventListener('keyup', (e) => {
+      socket.emit(actions.TYPE, { key: e.key })
+    })
+
+    socket.on(actions.TICK, ({ screen }) => {
+      const prefix = 'data:image/png;base64,';
+      screenDOM.setAttribute('src', prefix + screen)
+    })
+  </script>
+</html>
