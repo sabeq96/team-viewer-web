@@ -1,4 +1,4 @@
-const screenDOM = document.getElementById('screen');
+const screenId = 'screen';
 
 document.body.addEventListener('mousemove', (e) => {
   const { x, y } = e;
@@ -15,5 +15,9 @@ document.body.addEventListener('keyup', (e) => {
 
 socket.on(actions.TICK, ({ screen }) => {
   const prefix = 'data:image/png;base64,';
-  screenDOM.setAttribute('src', prefix + screen);
+  const image = document.getElementById(screenId) || document.createElement('img');
+
+  image.id = screenId;
+  image.src = `${prefix}${screen}`;
+  document.body.appendChild(image);
 });
